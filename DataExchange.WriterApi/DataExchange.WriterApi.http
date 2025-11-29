@@ -1,0 +1,6 @@
+@DataExchange.WriterApi_HostAddress = http://localhost:5156
+
+GET {{DataExchange.WriterApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

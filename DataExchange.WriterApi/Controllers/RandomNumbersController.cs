@@ -32,7 +32,6 @@ namespace DataExchange.WriterApi.Controllers
             {
                 _logger.LogInformation("Fetching {Count} random numbers from CSRNG API", count);
 
-                // 1. Fetch from external API
                 var apiResponses = await _csrngApiService.GetRandomNumbersAsync(count, min, max);
 
                 if (apiResponses.Count == 0)
@@ -40,7 +39,6 @@ namespace DataExchange.WriterApi.Controllers
                     return BadRequest("Failed to fetch random numbers from external API");
                 }
 
-                // 2. Map to domain model
                 var randomNumbers = apiResponses.Select(r => new RandomNumber
                 {
                     Id = Guid.NewGuid(),
@@ -50,7 +48,6 @@ namespace DataExchange.WriterApi.Controllers
                     CreatedAt = DateTime.UtcNow
                 }).ToList();
 
-                // 3. Send to Storage API
                 var success = await _storageApiClient.StoreNumbersAsync(randomNumbers);
 
                 if (!success)

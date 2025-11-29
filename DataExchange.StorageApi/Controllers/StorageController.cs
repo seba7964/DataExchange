@@ -17,9 +17,6 @@ namespace DataExchange.StorageApi.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Writer API će zvati ovaj endpoint da spremi brojeve
-        /// </summary>
         [HttpPost("numbers")]
         public async Task<IActionResult> StoreNumbers([FromBody] List<RandomNumber> numbers)
         {
@@ -46,9 +43,6 @@ namespace DataExchange.StorageApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Reader API će zvati ovaj endpoint da dohvati sve brojeve
-        /// </summary>
         [HttpGet("numbers")]
         public async Task<IActionResult> GetAllNumbers()
         {
@@ -72,9 +66,6 @@ namespace DataExchange.StorageApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Dohvati broj po ID-u
-        /// </summary>
         [HttpGet("numbers/{id}")]
         public async Task<IActionResult> GetNumberById(Guid id)
         {
@@ -96,9 +87,6 @@ namespace DataExchange.StorageApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Statistika
-        /// </summary>
         [HttpGet("stats")]
         public async Task<IActionResult> GetStats()
         {
@@ -118,9 +106,6 @@ namespace DataExchange.StorageApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Obriši sve
-        /// </summary>
         [HttpDelete("numbers")]
         public async Task<IActionResult> ClearAll()
         {

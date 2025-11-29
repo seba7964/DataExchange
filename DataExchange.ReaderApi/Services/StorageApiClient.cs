@@ -1,4 +1,5 @@
-﻿using DataExchange.Shared.Models;
+﻿using DataExchange.ReaderApi.Models;
+using DataExchange.Shared.Models;
 using System.Text.Json;
 
 namespace DataExchange.ReaderApi.Services
@@ -8,12 +9,20 @@ namespace DataExchange.ReaderApi.Services
         private readonly HttpClient _httpClient;
         private readonly ILogger<StorageApiClient> _logger;
         private readonly string _storageApiBaseUrl;
+        private readonly int _timeoutSeconds;
 
-        public StorageApiClient(HttpClient httpClient, IConfiguration configuration, ILogger<StorageApiClient> logger)
+        public StorageApiClient(
+            HttpClient httpClient,
+            IConfiguration configuration,
+            ILogger<StorageApiClient> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
+
             _storageApiBaseUrl = configuration["StorageApi:BaseUrl"] ?? "https://localhost:7000";
+            _timeoutSeconds = configuration.GetValue<int>("StorageApi:TimeoutSeconds", 30);
+
+            _httpClient.Timeout = TimeSpan.FromSeconds(_timeoutSeconds);
         }
 
         public async Task<List<RandomNumber>> GetAllNumbersAsync()
@@ -108,19 +117,6 @@ namespace DataExchange.ReaderApi.Services
                 _logger.LogError(ex, "Error calling Storage API for stats");
                 return 0;
             }
-        }
-
-        // Helper classes for deserialization
-        private class StorageApiResponse
-        {
-            public int TotalCount { get; set; }
-            public List<RandomNumber> Numbers { get; set; } = new();
-        }
-
-        private class StatsResponse
-        {
-            public int TotalNumbers { get; set; }
-            public string Message { get; set; } = string.Empty;
         }
     }
 }

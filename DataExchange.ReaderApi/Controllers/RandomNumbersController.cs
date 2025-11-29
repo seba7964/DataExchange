@@ -18,9 +18,7 @@ namespace DataExchange.ReaderApi.Controllers
             this.logger = logger;
         }
 
-        /// <summary>
-        /// Get all stored random numbers from Storage API
-        /// </summary>
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -43,9 +41,6 @@ namespace DataExchange.ReaderApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Get a specific random number by ID from Storage API
-        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -69,9 +64,6 @@ namespace DataExchange.ReaderApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Get statistics from Storage API
-        /// </summary>
         [HttpGet("stats")]
         public async Task<IActionResult> GetStats()
         {
@@ -108,9 +100,6 @@ namespace DataExchange.ReaderApi.Controllers
             }
         }
 
-        /// <summary>
-        /// Search numbers by value range
-        /// </summary>
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromQuery] int? minValue, [FromQuery] int? maxValue)
         {

@@ -2,9 +2,6 @@ using DataExchange.ReaderApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// UKLONI Storage referencu - više ne koristimo direktno!
-// builder.Services.AddSingleton<IRandomNumberStorage, InMemoryRandomNumberStorage>();
-
 // Storage API client
 builder.Services.AddHttpClient<IStorageApiClient, StorageApiClient>();
 

@@ -7,16 +7,23 @@ namespace DataExchange.WriterApi.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<CsrngApiService> _logger;
-        private const string BaseUrl = "https://csrng.net/csrng/csrng.php";
-        private const int DelayBetweenRequestsMs = 1000; // 1 sekunda između poziva
+        private readonly string _baseUrl;
+        private readonly int _delayBetweenRequestsMs;
+        private readonly int _timeoutSeconds;
 
-        public CsrngApiService(HttpClient httpClient, ILogger<CsrngApiService> logger)
+        public CsrngApiService(
+            HttpClient httpClient,
+            IConfiguration configuration,
+            ILogger<CsrngApiService> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
 
-            // Postavi timeout za HTTP request (10 sekundi)
-            _httpClient.Timeout = TimeSpan.FromSeconds(30);
+            _baseUrl = configuration["CsrngApi:BaseUrl"] ?? "https://csrng.net/csrng/csrng.php";
+            _delayBetweenRequestsMs = configuration.GetValue<int>("CsrngApi:DelayBetweenRequestsMs", 1000);
+            _timeoutSeconds = configuration.GetValue<int>("CsrngApi:TimeoutSeconds", 10);
+
+            _httpClient.Timeout = TimeSpan.FromSeconds(_timeoutSeconds);
         }
 
         public async Task<List<CsrngResponse>> GetRandomNumbersAsync(int count, int min = 1, int max = 1000)
@@ -27,7 +34,7 @@ namespace DataExchange.WriterApi.Services
             {
                 try
                 {
-                    var url = $"{BaseUrl}?min={min}&max={max}";
+                    var url = $"{_baseUrl}?min={min}&max={max}";
 
                     _logger.LogInformation("Fetching random number {Current}/{Total} from CSRNG API", i + 1, count);
 
@@ -46,11 +53,10 @@ namespace DataExchange.WriterApi.Services
                         _logger.LogInformation("Successfully fetched number: {Value}", apiResponse[0].Random);
                     }
 
-                    // Delay između poziva (osim nakon zadnjeg)
                     if (i < count - 1)
                     {
-                        _logger.LogDebug("Waiting {Delay}ms before next request", DelayBetweenRequestsMs);
-                        await Task.Delay(DelayBetweenRequestsMs);
+                        _logger.LogDebug("Waiting {Delay}ms before next request", _delayBetweenRequestsMs);
+                        await Task.Delay(_delayBetweenRequestsMs);
                     }
                 }
                 catch (HttpRequestException ex)

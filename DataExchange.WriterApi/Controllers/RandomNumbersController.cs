@@ -22,9 +22,6 @@ namespace DataExchange.WriterApi.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Fetch random numbers from external API and send to Storage API
-        /// </summary>
         [HttpPost("fetch")]
         public async Task<IActionResult> FetchAndStoreNumbers([FromQuery] int count = 5, [FromQuery] int min = 1, [FromQuery] int max = 1000)
         {

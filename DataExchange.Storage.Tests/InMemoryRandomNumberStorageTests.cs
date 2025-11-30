@@ -35,9 +35,9 @@ namespace DataExchange.Storage.Tests
                 Max = 100,
                 CreatedAt = DateTime.UtcNow
             };
+            await _storage.AddNumberAsync(number);
 
             // Act
-            await _storage.AddNumberAsync(number);
             var result = await _storage.GetNumberByIdAsync(number.Id);
 
             // Assert
@@ -58,9 +58,9 @@ namespace DataExchange.Storage.Tests
                 new RandomNumber { Id = Guid.NewGuid(), Value = 20, Min = 1, Max = 100, CreatedAt = DateTime.UtcNow },
                 new RandomNumber { Id = Guid.NewGuid(), Value = 30, Min = 1, Max = 100, CreatedAt = DateTime.UtcNow }
             };
+            await _storage.AddNumbersAsync(numbers);
 
             // Act
-            await _storage.AddNumbersAsync(numbers);
             var allNumbers = await _storage.GetAllNumbersAsync();
 
             // Assert
@@ -145,10 +145,10 @@ namespace DataExchange.Storage.Tests
             var id = Guid.NewGuid();
             var number1 = new RandomNumber { Id = id, Value = 100, Min = 1, Max = 100, CreatedAt = DateTime.UtcNow };
             var number2 = new RandomNumber { Id = id, Value = 200, Min = 1, Max = 100, CreatedAt = DateTime.UtcNow };
-
-            // Act
             await _storage.AddNumberAsync(number1);
             await _storage.AddNumberAsync(number2);
+
+            // Act
             var result = await _storage.GetNumberByIdAsync(id);
 
             // Assert
